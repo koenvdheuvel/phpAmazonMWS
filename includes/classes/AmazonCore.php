@@ -351,8 +351,13 @@ abstract class AmazonCore{
         if ($r['code'] == 200){
             return true;
         } else {
-            $xml = simplexml_load_string($r['body'])->Error;
-            $this->log("Bad Response! ".$r['code']." ".$r['error'].": ".$xml->Code." - ".$xml->Message,'Urgent');
+	    try { 
+                $xml = simplexml_load_string($r['body'])->Error;
+                $this->log("Bad Response! ".$r['code']." ".$r['error'].": ".$xml->Code." - ".$xml->Message,'Urgent');
+	    } catch (Exception $e) {
+	        $this->log($e->getMessage());
+	    }
+		
             return false;
         }
     }
